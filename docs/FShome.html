@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=SkUIQBDZs0IgCI7TopZra2b23C08SDUu"></script>
+  <script type="text/javascript" src="http://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js"></script>
+  <script type="text/javascript" src="http://lbsyun.baidu.com/jsdemo/data/points-sample-data.js"></script>
+  <title>佛山地区加油站分布</title>
+  <style type="text/css">
+		ul,li{list-style: none;margin:0;padding:0;float:left;}
+		html{height:100%}
+		body{height:100%;margin:0px;padding:0px;font-family:"微软雅黑";}
+		#container{height:500px;width:100%;}
+		#r-result{width:100%;}
+    #heading{
+                width: 100%;
+                height: 50px;
+            }
+    #content_menu{
+                width: 10%;
+                height: 700px;
+                /*定义浮动，不定义的话，界面会乱*/
+                float: left;
+            }
+    #content_body{
+                width: 90%;
+                height: 700px;
+                float: right;
+            }
+.menu_list {width: 100%;margin: 0;}
+.menu_head {
+height: 47px;
+line-height: 47px;
+padding-left: 38px;
+font-size: 14px;
+color: #525252;
+cursor: pointer;
+border: 1px solid #f1f1f1;
+position: relative;
+margin: 0px;
+font-weight: bold;
+}
+ 
+ 
+.menu_nva {
+line-height: 38px;
+border-left: 1px solid #51a9f18c;
+background: #fff;
+border-right: 1px solid #51a9f18c;
+}
+ 
+.menu_nva a {
+display: block;
+height: 38px;
+line-height: 38px;
+padding-left: 38px;
+color: #777777;
+background: #fff;
+text-decoration: none;
+border-bottom: 1px solid #51a9f18c;
+}
+ 
+.menu_nva a:hover {
+text-decoration: none;
+}
+@media only screen and (max-width: 800px) {
+   #content_menu {
+    display: none;
+    }
+    #content_body {
+    box-sizing: border-box;
+    padding: 2px;
+    width: 100%;
+    }
+    h1 {
+    font-size: 20px;
+      }
+   }
+</style>
+</head>
+<body>
+
+    <div id="global">
+        <div id="heading">
+            <h1 style="margin-bottom:0;text-align:center">佛山地区加油站分布</h1>
+        </div>
+        
+        <div id="content_menu">
+            <div id="firstpaneDiv" class="menu_list">
+                <h3 class="menu_head">佛山地区</h3>
+            </div>  
+        </div>
+        <div id="content_body">
+            <div id="r-result">
+                <!-- <input type="button"  onclick="openHeatmap();" value="显示热力图"/>
+                <input type="button"  onclick="closeHeatmap();" value="关闭热力图"/> -->
+                <input type="button"  onclick="showMaker();" value="显示资源分布"/>
+                <input type="button"  onclick="hideOver();" value="隐藏资源分布"/>
+            </div>
+            <div id="container"></div>
+            <div id="aa"></div>
+        </div>
+    </div>
+   
+	
+  
+</body>
+</html>
+
+<script type="text/javascript">
+  var map = new BMap.Map("container");          // 创建地图实例
+  var point = new BMap.Point(113.128222,23.027493);//佛山
+  map.centerAndZoom(point, 15);             // 初始化地图，设置中心点坐标和地图级别
+  map.enableScrollWheelZoom(); // 允许滚轮缩放
+  
+  var points = [
+{"name":"	中油BP佛平加油站	","adr":"	南海区佛平路南海车站旁	","tel":	13702908956	,"lng":	113.159837	,"lat":	23.044661	},
+{"name":"	中油BP德裕加油站	","adr":"	三水区乐平镇南边南乐路	","tel":	13827793918	,"lng":	112.946116	,"lat":	23.278442	},
+{"name":"	特能宝逢沙加油站	","adr":"	大良碧桂路逢沙路段	","tel":	"" ,"lng":	113.305907	,"lat":	22.820469	},
+{"name":"	中国石油焌隆加油站	","adr":"	广东肇庆市端州区西江北路东侧（佛山山庄对面）	","tel":	13827550963	,"lng":	112.45706	,"lat":	23.07155	},
+{"name":"	南海大道北加油站	","adr":"	广东佛山市南海区桂城南海大道北17号	","tel":	13929975650	,"lng":	113.145769	,"lat":	23.062929	},
+{"name":"	中国石油广明南加油站	","adr":"	更合镇广明高速公路延长线	","tel":	13620157625	,"lng":	112.506882	,"lat":	22.761949	},
+{"name":"	中国石油香山加油站	","adr":"	更合镇香山村委员会布社村口	","tel":	13543622502	,"lng":	112.469638	,"lat":	22.759485	},
+{"name":"	中油BP金盛加油站	","adr":"	南海区狮山大道兴业路口	","tel":	13925928060	,"lng":	113.015672	,"lat":	23.102716	},
+{"name":"	中国石油季华南加油站	","adr":"	禅城区南庄镇堤田村季华西路南侧	","tel":	18666528546	,"lng":	113.044154	,"lat":	23.007723	},
+{"name":"	中油BP伟业加油站	","adr":"	三水区西南街广海路对外开发区16区1号	","tel":	13929850823	,"lng":	112.869669	,"lat":	23.182591	},
+{"name":"	中油BP里水加油站	","adr":"	广东佛山市南海区里水邓岗公路	","tel":	13927726960	,"lng":	113.162792	,"lat":	23.192343	},
+{"name":"	中国石油顺达加油站	","adr":"	九江镇南方柳木村中石油加油站	","tel":	13542539787	,"lng":	113.030901	,"lat":	22.828937	},
+{"name":"	中油BP南电加油站	","adr":"	南海区西樵旅游度假区二拱路段	","tel":	13670657140	,"lng":	112.943871	,"lat":	22.928967	},
+{"name":"	中油BP德联加油站	","adr":"	三水区乐平镇三江经济开发区二号	","tel":	13824753203	,"lng":	113.031418	,"lat":	23.239968	},
+{"name":"	中国石油太澳西加油站	","adr":"	广东佛山市顺德区太澳高速广珠线西线高速段	","tel":	13676224699	,"lng":	113.26844	,"lat":	22.91816	},
+{"name":"	中油BP亚太加油站	","adr":"	三水区二桥高速路出口亚太加油站	","tel":	13929850823	,"lng":	112.8476	,"lat":	23.206312	},
+{"name":"	中国石油万丰加油站	","adr":"	顺德区乐从镇三乐路大罗入村大道4号	","tel":	13620157625	,"lng":	113.127585	,"lat":	22.947873	},
+{"name":"	中国石油谭边加油站	","adr":"	大沥街道谭边村虹岭路段	","tel":	""	,"lng":	113.074419	,"lat":	23.109606	},
+{"name":"	中油BP百东加油站	","adr":"	南海区西樵镇樵丹路北侧百东开发区	","tel":	15899831835	,"lng":	112.936293	,"lat":	22.973216	},
+{"name":"	中国石油广三南加油站	","adr":"	广东佛山市南海区狮山镇广三高速狮山服务区（西向东）	","tel":	13925956560	,"lng":	113.002579	,"lat":	23.144416	},
+{"name":"	闽海加油站	","adr":"	伦教荔村管理区办事处加油站	","tel":	18613185138	,"lng":	113.164059	,"lat":	22.861583	},
+{"name":"	闽海江湾加油站	","adr":"	江湾二路8号	","tel":	18613185138	,"lng":	113.099657	,"lat":	23.021897	},
+{"name":"	中油BP海曙加油站	","adr":"	三水区西南街民营科技工业园12号	","tel":	15916400978	,"lng":	112.925827	,"lat":	23.22015	},
+{"name":"	中油BP丹江加油站	","adr":"	南海区丹灶庙北路段	","tel":	15015816095	,"lng":	112.924808	,"lat":	23.053699	},
+{"name":"	中国石油马村加油站	","adr":"	广东佛山市顺德区北滘镇三乐公路马龙村委北侧	","tel":	13924522758	,"lng":	113.162317	,"lat":	22.930432	},
+{"name":"	中油BP广联加油站	","adr":"	南海区狮山镇穆院村321国道广海路段（南海软件科技园路口侧）	","tel":	13929113549	,"lng":	113.03185	,"lat":	23.135291	},
+{"name":"	中油BP五星加油站	","adr":"	南海区狮山镇小塘五星村委会	","tel":	13929948995	,"lng":	112.996022	,"lat":	23.046772	},
+{"name":"	中油BP大田加油站	","adr":"	三水区西南街南丰大丰西南工业园A区9-4号	","tel":	13889942966	,"lng":	112.926481	,"lat":	23.250875	},
+{"name":"	中油BP佳宜加油站	","adr":"	南海区里水镇甘蕉路1号	","tel":	13927796275	,"lng":	113.145593	,"lat":	23.171317	},
+{"name":"	中油BP城南加油站	","adr":"	广东佛山市禅城区佛山大道中87号	","tel":	13380207115	,"lng":	113.1081	,"lat":	23.011188	},
+{"name":"	中国石油大冲加油站	","adr":"	里水镇大冲村桂和公路西侧	","tel":  ""	,"lng":	113.135789	,"lat":	23.156531	},
+{"name":"	中油BP顺永加油站	","adr":"	105乡道沙头	","tel":	13928615299	,"lng":	113.000539	,"lat":	23.215008	},
+{"name":"	中油BP西樵顺达加油站	","adr":"	南海区西樵新田三角开发区	","tel":	13670657140	,"lng":	112.936047	,"lat":	22.892722	},
+{"name":"	中油BP新星加油站	","adr":"	石湾区江湾二路5号	","tel":	13923173944	,"lng":	113.097964	,"lat":	23.020421	},
+{"name":"	中油BP横溢加油站	","adr":"	南海区丹灶镇丹横路大涡路边	","tel":	13923120770	,"lng":	112.918152	,"lat":	23.066502	},
+{"name":"	中油BP盐步加油站	","adr":"	南海区盐步镇环镇北路30号	","tel":	13929935035	,"lng":	113.186139	,"lat":	23.09531	},
+{"name":"	中油BP龙高加油站	","adr":"	南海区九江镇镇南管理区	","tel":	13928682973	,"lng":	112.931339	,"lat":	22.882664	},
+{"name":"	佛山南桂东加油站	","adr":"	广东佛山市南海区桂城南桂东路22区	","tel":	13929907673	,"lng":	113.152241	,"lat":	23.038457	},
+{"name":"	中油BP大沥加油站	","adr":"	南海区大沥镇冲表路口(528231)	","tel":	13929935235	,"lng":	113.114949	,"lat":	23.112289	},
+{"name":"	中油BP广和加油站	","adr":"	广东佛山市南海区和顺镇东西二线白岗溪地段	","tel":	13923175599	,"lng":	113.163463	,"lat":	23.236186	},
+{"name":"	中油BP桂澜加油站	","adr":"	南海区桂城季华东路石啃第13地段	","tel":	18665446066	,"lng":	113.162923	,"lat":	23.01911	},
+{"name":"	中油BP中碧加油站	","adr":"	南海区九江镇沙咀工业区龙高公路旁	","tel":	13923234804	,"lng":	112.999275	,"lat":	22.875261	},
+{"name":"	中油BP南奇加油站	","adr":"	南海区桂和大道奇槎路段	","tel":	13392210683	,"lng":	113.147916	,"lat":	23.088765	},
+{"name":"	中油BP大沥表加油站	","adr":"	大沥沥北公路边	","tel":	""	,"lng":	113.12302	,"lat":	23.13123	},
+{"name":"	中油BP樵江加油站	","adr":"	南海区狮山镇狮山农场路口	","tel":	13923100708	,"lng":	113.015115	,"lat":	23.135952	},
+{"name":"	源潭加油站	","adr":"	乐平镇源潭村委会禾仓村鹅场(土名)	","tel":	75787383662	,"lng":	113.25444	,"lat":	23.18833	},
+{"name":"	中油BP大塘加油站	","adr":"	三水区大塘镇新莲塘村大塘油站	","tel":	13929960926	,"lng":	112.903681	,"lat":	23.444618	},
+{"name":"	中油BP长江加油站	","adr":"	高明区高明大道杨和镇天腰岗	","tel":	13630130821	,"lng":	112.777559	,"lat":	22.867428	},
+{"name":"	中国石油汇晖加油站	","adr":"	南海区狮山镇桃园东路29号松夏工业园	","tel":	15989822147	,"lng":	113.085412	,"lat":	23.165067	},
+{"name":"	顺达加油站	","adr":"	佛山市南海区狮山兴贤高岗脚开发区	","tel":	13728582644	,"lng":	113.089545	,"lat":	23.130732	},
+{"name":"	中国石油丰瀛加油站	","adr":"	广东佛山市三水区乐平镇三溪田东村三水工业园西区56号	","tel":	15302957568	,"lng":	113.009102	,"lat":	23.241209	},
+{"name":"	中油BP番村加油站	","adr":"	顺德区勒流街道办事处冲鹤村委会	","tel":	13302564785	,"lng":	113.19824	,"lat":	22.79943	},
+{"name":"	中国石油广三北加油站	","adr":"	广东佛山市南海区狮山镇广三高速狮山服务区（东向西	","tel":	13925956560	,"lng":	113.003234	,"lat":	23.14513	},
+{"name":"	中油BP新生加油站	","adr":"	广东佛山市三水区白泥镇国家火炬计划佛山电子电器产业基地南区117号	","tel":	18823150290	,"lng":	112.890135	,"lat":	22.993387	},
+{"name":"	中油BP罗行加油站	","adr":"	南海区丹灶镇金沙罗行管理区	","tel":	18676590921	,"lng":	112.973499	,"lat":	23.029478	},
+{"name":"	中油BP溶洲加油站	","adr":"	广东佛山市禅城区南庄溶洲管理区牛圩路段	","tel":	15817876717	,"lng":	113.053281	,"lat":	22.991046	},
+{"name":"	中国石油广明北加油站	","adr":"	更合镇广明高速公路延长线	","tel":	13620157625	,"lng":	112.505903	,"lat":	22.76299	},
+{"name":"	中油BP英姿加油站	","adr":"	南海区桂城桂澜路北约村	","tel":	13927797958	,"lng":	113.161247	,"lat":	23.050057	},
+{"name":"	中油BP石泉加油站	","adr":"	南海区松岗桂和路石泉路段（南海影视城前500米）	","tel":	13728511698	,"lng":	113.125508	,"lat":	23.194717	},
+{"name":"	中油BP龙江加油站	","adr":"	顺德区龙江镇龙首工业大道消防中队斜对面	","tel":	13380508121	,"lng":	113.06214	,"lat":	22.888694	},
+{"name":"	中国石油中兴加油站	","adr":"	顺德区伦教街道办事处三洲居委会龙洲公路三洲路段	","tel":	""	,"lng":	113.26247	,"lat":	22.87079	},
+{"name":"	中油BP务庄加油站	","adr":"	南海区罗村务庄罗务路段	","tel":	15815989186	,"lng":	113.031227	,"lat":	23.051348	},
+{"name":"	闽海加油站	","adr":"	大沥镇黄岐广佛路段78号	","tel":	18613185138	,"lng":	113.198586	,"lat":	23.117673	},
+{"name":"	中油BP金桥加油站	","adr":"	南海区丹灶镇金沙新城区大桥路段	","tel":	18988638225	,"lng":	112.970324	,"lat":	23.070901	},
+{"name":"	中油BP樵丹加油站	","adr":"	南海区丹灶镇工业大道樵丹加油站	","tel":	13923120770	,"lng":	112.918246	,"lat":	23.038911	},
+{"name":"	中油BP浩江加油站	","adr":"	南海区小塘镇广海公路321国道29公里处	","tel":	13889943960	,"lng":	112.954714	,"lat":	23.146189	},
+{"name":"	中油BP碧桂加油站	","adr":"	容桂容边居委会九横路连接容边段	","tel":	13825579716	,"lng":	113.288585	,"lat":	22.866817	},
+{"name":"	中国石油季华北加油站	","adr":"	禅城区南庄镇堤田村季华西路北侧	","tel":	13928691005	,"lng":	113.032441	,"lat":	23.008779	},
+{"name":"	中国石油盘龙加油站	","adr":"	广东佛山市高明区明城镇合和大道99号	","tel":	13928509058	,"lng":	112.661997	,"lat":	22.825769	},
+{"name":"	中油BP大丰加油站	","adr":"	三水区西南街西南工业园A区9-4号	","tel":	13825189975	,"lng":	112.926456	,"lat":	23.242316	},
+{"name":"	中国石油旋岗加油站	","adr":"	高明区明城镇旋岗一路冲坑村前	","tel":	""	,"lng":	112.690185	,"lat":	22.865232	},
+{"name":"	中国石油樵金加油站	","adr":"	南海区丹灶镇新安村委会“蛇劲南”地段	","tel":	13928509089	,"lng":	112.97023	,"lat":	23.061702	},
+{"name":"	中国石油南丰东加油站	","adr":"	广东佛山市三水区南丰大道宝月市场对面	","tel":	13760848086	,"lng":	112.926435	,"lat":	23.250853	},
+{"name":"	中国石油大塘陆上加油站	","adr":"	三水区大塘镇大兴大道望岗村委会上村	","tel":	""	,"lng":	112.915159	,"lat":	23.422547	},
+{"name":"	中油BP小塘加油站	","adr":"	南海区小塘镇小塘管理区新天地食庄	","tel":	13929948995	,"lng":	112.98368	,"lat":	23.093948	},
+{"name":"	中油BP顺通加油站	","adr":"	三水区乐平镇新旗村委河南2队	","tel":	13925992269	,"lng":	113.020191	,"lat":	23.299721	},
+{"name":"	中油BP华德南加油站	","adr":"	顺德区陈村镇佛陈公路大都路段	","tel":	13825566464	,"lng":	113.175839	,"lat":	22.977231	},
+{"name":"	中国石油太澳东加油站	","adr":"	广东佛山市顺德区太澳高速广珠线西线高速段	","tel":	18688282903	,"lng":	113.2706	,"lat":	22.91621	},
+{"name":"	中油BP杏港加油站	","adr":"	禅城区南庄镇杏头开发区528061	","tel":	18665431691	,"lng":	113.05853	,"lat":	22.962233	},
+{"name":"	中国石油建工加油站	","adr":"	高明区三洲旧大桥西则	","tel":	13534495351	,"lng":	112.860676	,"lat":	22.894353	},
+{"name":"	中油BP潦边加油站	","adr":"	三水区大塘镇潦边村路段	","tel":	13929960926	,"lng":	112.928126	,"lat":	23.460149	},
+{"name":"	中油BP沈村加油站	","adr":"	南海区里水镇北沙西线公路	","tel":	13560477997	,"lng":	113.139905	,"lat":	23.194279	},
+{"name":"	中国石油白石加油站	","adr":"	更合镇白石开发区	","tel":	13229298950	,"lng":	112.56528	,"lat":	22.8075	},
+{"name":"	中油BP塱心加油站	","adr":"	南海区丹灶塱心村	","tel":	15899831835	,"lng":	112.928449	,"lat":	22.999384	},
+{"name":"	中油BP伟力加油站	","adr":"	高明区新圩镇罗稳开发区	","tel":	13790019086	,"lng":	112.644964	,"lat":	22.882985	},
+{"name":"	中国石油更合加油站	","adr":"	广东佛山市高明区更合镇全和大道249号	","tel":	15818048739	,"lng":	112.591006	,"lat":	22.789262	},
+{"name":"	中油BP佳德乐加油站	","adr":"	南海区沙头九樵公路石江路段	","tel":	13450781553	,"lng":	113.013967	,"lat":	22.913603	},
+{"name":"	中油BP华德北加油站	","adr":"	顺德区陈村镇佛陈公路绀村路段北侧	","tel":	13809258098	,"lng":	113.200528	,"lat":	22.971622	},
+{"name":"	中油BP工交加油站	","adr":"	高明区西安河江开发区跃华路第543号	","tel":	13702560508	,"lng":	112.85736	,"lat":	22.89177	},
+{"name":"	中油BP樵高加油站	","adr":"	南海区广东省西樵镇简村樵高路南侧	","tel":	13600466792	,"lng":	112.95405	,"lat":	22.94126	},
+{"name":"	中国石油杨梅加油站	","adr":"	高明区杨梅镇红梅路8号	","tel":	13415492664	,"lng":	112.804031	,"lat":	22.832181	},
+{"name":"	三水南岸加油站	","adr":"	南街道南岸村委会	","tel":	18620626598	,"lng":	112.891787	,"lat":	23.142332	},
+{"name":"	大镇加油站	","adr":"	南海区325国道广佛路段大镇村口斜对面	","tel":	13380241317	,"lng":	113.109698	,"lat":	23.095468	},
+{"name":"	中国石油彩虹北加油站	","adr":"	高明区荷城街道高明大道东段	","tel":	15978666764	,"lng":	112.855248	,"lat":	22.899665	}
+
+    ];  // 添加海量点数据
+
+    
+function showMaker(){
+    for( var i = 0;i < points.length; i++){
+        // var myIcon = new BMap.Icon("http://7xic1p.com1.z0.glb.clouddn.com/markers.png", new BMap.Size(23, 25), {
+        //     // 指定定位位置
+        //     offset: new BMap.Size(10, 25),
+        //     // 当需要从一幅较大的图片中截取某部分作为标注图标时，需要指定大图的偏移位置   
+        //     imageOffset: new BMap.Size(0, 0 - i * 25) // 设置图片偏移  
+        // });
+        var point = new BMap.Point(points[i].lng,points[i].lat);
+        // 创建标注对象并添加到地图 ,{icon: myIcon}
+        var marker = new BMap.Marker(point);
+        map.addOverlay(marker);
+        createTag(marker,i);
+    };
+      
+	function createTag(marker,m){ 
+     var text = "<p>名称：" + points[m].name + "</p><p>地址：" + points[m].adr + "</p>"; 
+     var label = new BMap.Label(text, {
+        offset : new BMap.Size(-85, -120)
+    });      
+    //设置label(标注的样式)
+    label.setStyle({
+        color : "black",
+        fontSize : "12px",
+        height : "110px",
+        //lineHeight : "20px",
+        fontFamily : "微软雅黑",
+        maxWidth : "none",
+        border : "none",display:"none"
+    });
+    marker.setLabel(label);  
+    var infoWindow = new BMap.InfoWindow("<p style='font-size:14px;'>" + text + "</p>"); 
+    marker.addEventListener("click", function () { this.openInfoWindow(infoWindow); });
+
+}
+	}
+function hideOver(){
+    map.clearOverlays(); 
+	}
+
+	
+</script>
